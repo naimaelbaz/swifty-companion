@@ -42,10 +42,7 @@ class User {
           ? (mainCursus['level'] ?? 0.0).toDouble()
           : 0.0,
       skills: mainCursus['skills'] ?? [],
-      projects: (json['projects_users'] as List).where((p) {
-          final cursusIds = p['cursus_ids'] as List;
-          return cursusIds.contains(21);
-        }).toList(),
+      projects: json['projects_users']
   );
   }
 }

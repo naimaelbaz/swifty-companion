@@ -65,7 +65,7 @@ flutter:
 
   assets:
     - .env
-    - assets/images/background.png
+    - assets/images/profileBackground.jpg
     - assets/images/logo.png
     - assets/images/userimage.png
 

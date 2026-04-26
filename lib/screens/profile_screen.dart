@@ -6,12 +6,14 @@ class ProfileScreen extends StatelessWidget {
   final User user;
   final Coalition coalition;
   ProfileScreen({required this.user, required this.coalition});
-
   @override
   Widget build(BuildContext context) {
-    final Color coalitionColor = Color(
+    Color coalitionColor = Color(
       int.parse(coalition.color.replaceAll('#', '0xff')),
     );
+    if (coalition.imageUrl.isEmpty) {
+      coalitionColor = Color.fromARGB(255, 74, 123, 172);
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -26,13 +28,19 @@ class ProfileScreen extends StatelessWidget {
 
       body: Stack(
         children: [
-          Image(
-            image: NetworkImage(coalition.imageUrl),
-            fit: BoxFit.fill,
-            width: double.infinity,
-            height: 150,
-          ),
-
+          coalition.imageUrl.isNotEmpty
+              ? Image.network(
+                  coalition.imageUrl,
+                  fit: BoxFit.fill,
+                  width: double.infinity,
+                  height: 150,
+                )
+              : Image.asset(
+                  'assets/images/profileBackground.jpg',
+                  fit: BoxFit.fill,
+                  width: double.infinity,
+                  height: 150,
+                ),
           Column(
             children: [
               SizedBox(height: 100),
@@ -131,7 +139,6 @@ class ProfileScreen extends StatelessWidget {
 
                               Container(
                                 width: double.infinity,
-                                // height: 350,
                                 padding: const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(25),
@@ -166,28 +173,51 @@ class ProfileScreen extends StatelessWidget {
                                     SingleChildScrollView(
                                       scrollDirection: Axis.horizontal,
                                       padding: const EdgeInsets.only(top: 10),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: user.skills.map((skill) {
-                                          double percentage =
-                                              skill['level'] / 20;
-                                          return Padding(
-                                            padding: const EdgeInsets.only(
-                                              right: 16,
+                                      child: user.skills.isNotEmpty
+                                          ? Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: user.skills.map((
+                                                skill,
+                                              ) {
+                                                double percentage =
+                                                    skill['level'] / 20;
+                                                return Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                        right: 16,
+                                                      ),
+                                                  child: SizedBox(
+                                                    width: 75,
+                                                    child: _skillRing(
+                                                      skill['name'],
+                                                      skill['level'],
+                                                      percentage,
+                                                      coalitionColor,
+                                                    ),
+                                                  ),
+                                                );
+                                              }).toList(),
+                                            )
+                                          : Column(
+                                              children: [
+                                                Icon(
+                                                  Icons.settings,
+                                                  color: Colors.white
+                                                      .withValues(alpha: 0.6),
+                                                  size: 40,
+                                                ),
+                                                SizedBox(height: 10),
+                                                Text(
+                                                  'No skills data available',
+                                                  style: TextStyle(
+                                                    color: Colors.white
+                                                        .withValues(alpha: 0.6),
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                            child: SizedBox(
-                                              width: 75,
-                                              child: _skillRing(
-                                                skill['name'],
-                                                skill['level'],
-                                                percentage,
-                                                coalitionColor,
-                                              ),
-                                            ),
-                                          );
-                                        }).toList(),
-                                      ),
                                     ),
                                   ],
                                 ),
@@ -230,37 +260,67 @@ class ProfileScreen extends StatelessWidget {
                                     ),
                                     SizedBox(height: 20),
                                     SizedBox(
+                                      width: double.infinity,
                                       height: 300,
                                       child: SingleChildScrollView(
-                                        // scrollDirection: Axis.vertical,
                                         physics: const BouncingScrollPhysics(),
                                         padding: const EdgeInsets.only(top: 10),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: user.projects.map((
-                                            project,
-                                          ) {
-                                            final String projectName = project['project']['name'];
-                                            final int mark = project['final_mark'] ?? 0;
-                                            final bool valid = project['validated?'] ?? false;
-                                            final String status = project['status'] ?? '';
-                                            return Padding(
-                                              padding: const EdgeInsets.only(
-                                                bottom: 16,
+                                        child: user.projects.isNotEmpty
+                                            ? Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: user.projects.map((
+                                                  project,
+                                                ) {
+                                                  final String projectName =
+                                                      project['project']['name'];
+                                                  final int mark =
+                                                      project['final_mark'] ??
+                                                      0;
+                                                  final bool valid =
+                                                      project['validated?'] ??
+                                                      false;
+                                                  final String status =
+                                                      project['status'] ?? '';
+                                                  return Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                          bottom: 16,
+                                                        ),
+                                                    child: SizedBox(
+                                                      child: _projectTile(
+                                                        projectName,
+                                                        mark,
+                                                        valid,
+                                                        status,
+                                                        coalitionColor,
+                                                      ),
+                                                    ),
+                                                  );
+                                                }).toList(),
+                                              )
+                                            : Column(
+                                                children: [
+                                                  Icon(
+                                                    Icons.folder_open,
+                                                    color: Colors.white
+                                                        .withValues(alpha: 0.6),
+                                                    size: 40,
+                                                  ),
+                                                  SizedBox(height: 10),
+                                                  Text(
+                                                    'No projects data available',
+                                                    style: TextStyle(
+                                                      color: Colors.white
+                                                          .withValues(
+                                                            alpha: 0.6,
+                                                          ),
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                              child: SizedBox(
-                                                child: _projectTile(
-                                                  projectName,
-                                                  mark,
-                                                  valid,
-                                                  status,
-                                                  coalitionColor,
-                                                ),
-                                              ),
-                                            );
-                                          }).toList(),
-                                        ),
                                       ),
                                     ),
                                   ],
@@ -299,13 +359,12 @@ class ProfileScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: const Color(0xFFFFFFFF), // ← teal border (inner)
+                      color: const Color(0xFFFFFFFF),
                       width: 1,
                     ),
                   ),
                   child: ClipOval(
                     child: Image.network(
-                      // color: Colors.white,
                       user.imageUrl,
                       width: 130,
                       height: 130,
@@ -393,71 +452,73 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-Widget _projectTile(String name, int mark, bool valid, String status, Color themeColor) {
-  final Color statusColor = status == 'finished' && valid
-      ? Colors.greenAccent
-      : status == 'finished' && !valid
+  Widget _projectTile(
+    String name,
+    int mark,
+    bool valid,
+    String status,
+    Color themeColor,
+  ) {
+
+    final Color statusColor = valid
+        ? Colors.greenAccent
+        : status == 'finished' && !valid
           ? Colors.redAccent
           : Colors.orangeAccent;
 
-  final IconData statusIcon = status == 'finished' && valid
-      ? Icons.check_circle_outline
-      : status == 'finished' && !valid
-          ? Icons.cancel_outlined
-          : Icons.timelapse;
+    final IconData statusIcon = valid
+        ? Icons.check_circle_outline
+        : status == 'finished' && !valid
+            ? Icons.cancel_outlined 
+            : Icons.timelapse;     
 
-  return Container(
-    width: double.infinity,
-    padding: const EdgeInsets.all(12),
-    decoration: BoxDecoration(
-      color: Colors.white.withValues(alpha: 0.05),
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: Colors.white10),
-    ),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                name,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white10),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              Text(
-                status == 'finished' ? '$mark / 100' : status.replaceAll('_', ' '),
-                style: const TextStyle(
-                  color: Colors.white60,
-                  fontSize: 10,
+                Text(
+                  valid || status == 'finished' 
+                    ? '$mark / 100' 
+                    : status.replaceAll('_', ' '),
+                  style: const TextStyle(color: Colors.white60, fontSize: 10),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        const SizedBox(width: 10),
-        Container(
-          width: 36,
-          height: 36,
-          decoration: BoxDecoration(
-            color: statusColor.withValues(alpha: 0.15),
-            border: Border.all(color: statusColor.withValues(alpha: 0.5)),
-            borderRadius: BorderRadius.circular(50),
+          const SizedBox(width: 10),
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: statusColor.withValues(alpha: 0.15),
+              border: Border.all(color: statusColor.withValues(alpha: 0.5)),
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: Icon(statusIcon, color: statusColor, size: 18),
           ),
-          child: Icon(
-            statusIcon,
-            color: statusColor,
-            size: 18,
-          ),
-        ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
 }

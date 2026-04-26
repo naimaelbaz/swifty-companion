@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../models/user_model.dart';
 import '../screens/profile_screen.dart';
-import '../screens/login_screen.dart';
 
 
 class SearchScreen extends StatefulWidget {
-  // final String token;
-  // SearchScreen({required this.token});
   @override
   State<SearchScreen> createState() => _SearchScreenState();
 }
@@ -32,62 +29,6 @@ class _SearchScreenState extends State<SearchScreen> {
               fit: BoxFit.contain,
               height: 50,
             ),
-            GestureDetector(
-              onTap: () async{
-                await clearToken();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
-                );
-              },
-              child: Container(
-                margin: EdgeInsets.only(top: 6),
-                width:110,
-                height: 30,
-                decoration: BoxDecoration(
-                  // color: const Color(0xFFFFFFFF),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Color(0xFF00babc), width: 1),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    // Padding for the text to move it away from the left edge
-                    const Padding(
-                      padding: EdgeInsets.only(left: 10),
-                      child: Text(
-                        'LOGOUT',
-                        style: TextStyle(
-                          color: Color(0xFF00babc),
-                          fontSize: 12,
-                          fontWeight: FontWeight.normal,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-                    ),
-
-                    Container(
-                      width: 40,
-                      height: 36,
-                      // margin: const EdgeInsets.all(
-                      //   2,
-                      // ), // Creates a tiny gap from the border
-                      decoration: BoxDecoration(
-                        // color: Colors.white,
-                        borderRadius: BorderRadius.circular(
-                          22,
-), // Matches the pill shape
-                      ),
-                      child: const Icon(
-                        Icons.logout,
-                        color: Color(0xFF00babc),
-                        size: 20,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
           ],
         ),
         backgroundColor: const Color(0xff1A2A3A),
@@ -95,9 +36,6 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
       body: SafeArea(
         child: Center(
-          // Keeps the content centered horizontally
-          // child: SingleChildScrollView(
-            // Prevents overflow on mobile keyboards
             child: Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: MediaQuery.of(context).size.width * 0.07,
@@ -106,7 +44,6 @@ class _SearchScreenState extends State<SearchScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // --- HEADER SECTION ---
                   Column(
                     children: [
                       RichText(
@@ -114,7 +51,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           style: TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
-                            letterSpacing: 1.5, // Increased for a tech look
+                            letterSpacing: 1.5,
                           ),
                           children: [
                             TextSpan(
@@ -150,14 +87,12 @@ class _SearchScreenState extends State<SearchScreen> {
 
                   const SizedBox(height: 60),
 
-                  // --- INPUT & BUTTON SECTION (Constrained for Large Screens) ---
                   ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 500),
                     child: Column(
                       children: [
                         const Text(
                           'Search any 42 student and view their profile, skills and projects.',
-                          // textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontSize: 14,
@@ -230,10 +165,10 @@ class _SearchScreenState extends State<SearchScreen> {
                               setState(() => _errorMessage = e.toString()
                                     .replaceAll('Exception: ', ''));
                             } finally {
-                              setState(() => _isLoading = false);  // ← ADD THIS
+                              setState(() => _isLoading = false);
                             }
                           },
-                          icon: const Icon(Icons.search), // Added the icon here
+                          icon: const Icon(Icons.search),
                           label: _isLoading
                           ? const SizedBox(
                               width: 20,
@@ -254,7 +189,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             minimumSize: const Size(
                               double.infinity,
                               55,
-                            ), // Fills the 400px width
+                            ),
                             foregroundColor: Colors.white,
                             backgroundColor: const Color(0xFF00babc),
                             shape: RoundedRectangleBorder(
@@ -303,6 +238,5 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
       );
-    // );
   }
 }
