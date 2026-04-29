@@ -140,8 +140,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
                         ElevatedButton.icon(
                           onPressed: _isLoading ? null : () async {
-                            if (inputString.trim().isEmpty)
+                            if (inputString.trim().isEmpty) {
                               return;
+                            }
                             setState(() {    
                               _isLoading = true; 
                               _errorMessage = null;

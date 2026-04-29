@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../models/user_model.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class ProfileScreen extends StatelessWidget {
   final User user;
