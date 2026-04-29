@@ -470,7 +470,9 @@ class ProfileScreen extends StatelessWidget {
         : status == 'finished' && !valid
             ? Icons.cancel_outlined 
             : Icons.timelapse;     
-
+    if (status == 'waiting_for_correction' || status == 'searching_a_group' || status == 'creating_group') {
+      status = 'In Progress';
+    }
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),

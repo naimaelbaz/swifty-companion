@@ -42,7 +42,7 @@ class User {
           ? (mainCursus['level'] ?? 0.0).toDouble()
           : 0.0,
       skills: mainCursus['skills'] ?? [],
-      projects: json['projects_users']
+      projects: json['projects_users'] ?? [],
   );
   }
 }
