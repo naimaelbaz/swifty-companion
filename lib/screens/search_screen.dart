@@ -34,8 +34,8 @@ class _SearchScreenState extends State<SearchScreen> {
         backgroundColor: const Color(0xff1A2A3A),
         elevation: 0,
       ),
-      body: SafeArea(
-        child: Center(
+      body: 
+        Center(
             child: Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: MediaQuery.of(context).size.width * 0.07,
@@ -235,8 +235,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 ],
               ),
             ),
-          ),
-        ),
-      );
+          )
+    );
   }
 }

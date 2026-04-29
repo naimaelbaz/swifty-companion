@@ -18,8 +18,8 @@ Future<String> getToken() async {
   if (response.statusCode != 200) {
     throw Exception("Failed to get token");
   }
-  final res = jsonDecode(response.body);
-  final token = res['access_token'];
+  final Map<String, dynamic> res = jsonDecode(response.body);
+  final String token = res['access_token'];
   await storage.write(key: 'access_token', value: token);
   await storage.write(key: 'expires_at', value:
     (DateTime.now().millisecondsSinceEpoch + (res['expires_in'] * 1000)).toString());
@@ -35,14 +35,6 @@ Future<String> getValidToken() async {
   return await storage.read(key: 'access_token') ?? await getToken();
 }
 
-Future<String?> getSavedToken() async {
-  return await storage.read(key: 'access_token');
-}
-
-Future<void> clearToken() async {
-  await storage.delete(key: 'access_token');
-  await storage.delete(key: 'expires_at');
-}
 
 Future<User> fetchUser(String login, String accessToken) async {
   final user = await http.get(
