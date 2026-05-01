@@ -149,6 +149,11 @@ class _SearchScreenState extends State<SearchScreen> {
                             });          
                             try {
                               final token = await getValidToken();
+                              if(!checkValidUser(inputString))
+                              {
+                                setState(() => _errorMessage = 'Invalid login format!');
+                                return;
+                              }
                               final results = await Future.wait([
                                 fetchUser(inputString.trim(), token),
                                 fetchUserCoalitions(inputString.trim(), token),
@@ -238,5 +243,9 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           )
     );
+  }
+  bool checkValidUser(String input){
+    final validLogin = RegExp(r'^[a-zA-Z0-9_-]+$');
+    return validLogin.hasMatch(input);
   }
 }
