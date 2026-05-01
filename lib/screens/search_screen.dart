@@ -143,17 +143,19 @@ class _SearchScreenState extends State<SearchScreen> {
                             if (inputString.trim().isEmpty) {
                               return;
                             }
+                            if(!checkValidUser(inputString))
+                            {
+                              setState(() => 
+                                _errorMessage = 'Invalid login format!'
+                              );
+                              return;
+                            }
                             setState(() {    
                               _isLoading = true; 
                               _errorMessage = null;
                             });          
                             try {
                               final token = await getValidToken();
-                              if(!checkValidUser(inputString))
-                              {
-                                setState(() => _errorMessage = 'Invalid login format!');
-                                return;
-                              }
                               final results = await Future.wait([
                                 fetchUser(inputString.trim(), token),
                                 fetchUserCoalitions(inputString.trim(), token),
